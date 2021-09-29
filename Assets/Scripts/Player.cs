@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
         //Movement input
         if (useJoystick)
         {
-             if (joystick.Horizontal >= .1f)
+            if (joystick.Horizontal >= .1f)
             {
                 horizontalMove = runSpeed;
             }
@@ -40,8 +40,8 @@ public class Player : MonoBehaviour
                 horizontalMove = 0f;
             }
         }
-        else   
-        { 
+        else
+        {
             horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
         }
 
@@ -51,7 +51,11 @@ public class Player : MonoBehaviour
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
         //Jump input
-        if (verticalMove >= .4f || Input.GetButtonDown("Jump"))
+        if (useJoystick && verticalMove >= .5f)
+        {
+            jump = true;
+        }
+        else if (!useJoystick && Input.GetButtonDown("Jump"))
         {
             jump = true;
         }
