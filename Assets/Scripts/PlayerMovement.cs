@@ -11,7 +11,6 @@ public class PlayerMovement : MonoBehaviour
     float horizontalMove = 0f;
     bool jump = false;
     private int onLandFix;
-    private int jumpDelay;
 
     void Update()
     {
@@ -30,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnLanding()
     {
-        // if (onLandFix >= 10)
+        // if (onLandFix >= 4)
         // {
         //     onLandFix = 0;
         animator.SetBool("IsJumping", false);
