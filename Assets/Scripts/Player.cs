@@ -6,12 +6,13 @@ public class Player : MonoBehaviour
 {
     public CharacterController2D controller;
     public Animator animator;
+    public Joystick joystick;
     public Rigidbody2D rigidbody2D;
 
     public float runSpeed = 40f;
+    public bool useJoystick = false;
     float horizontalMove = 0f;
     bool jump = false;
-    private int onLandFix;
 
     Vector3 spawnPoint = new Vector3();
     public float falloff = -10f;
@@ -24,17 +25,37 @@ public class Player : MonoBehaviour
     void Update()
     {
         //Movement input
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+        if (useJoystick)
+        {
+             if (joystick.Horizontal >= .1f)
+            {
+                horizontalMove = runSpeed;
+            }
+            else if (joystick.Horizontal <= -.1f)
+            {
+                horizontalMove = -runSpeed;
+            }
+            else
+            {
+                horizontalMove = 0f;
+            }
+        }
+        else   
+        { 
+            horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+        }
+
+        float verticalMove = joystick.Vertical;
+
         //Apply movement value to Speed float for animation
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
         //Jump input
-        if (Input.GetButtonDown("Jump"))
+        if (verticalMove >= .4f || Input.GetButtonDown("Jump"))
         {
             jump = true;
         }
 
-        Debug.Log(Mathf.Abs(rigidbody2D.velocity.y));
         //Jump Animation
         if (Mathf.Abs(rigidbody2D.velocity.y) > 2f)
         {
@@ -62,6 +83,9 @@ public class Player : MonoBehaviour
     public void Respawn()
     {
         transform.position = spawnPoint;
+
+        //Respawn Sound
+        FindObjectOfType<AudioManager>().Play("PlayerRespawn");
     }
 
     void FixedUpdate()
