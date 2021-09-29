@@ -23,15 +23,20 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        //Movement
+        //Movement input
         horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+        //Apply movement value to Speed float for animation
         animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+
+        //Jump input
         if (Input.GetButtonDown("Jump"))
         {
             jump = true;
         }
 
-        if (Mathf.Abs(rigidbody2D.velocity.y) > 1f)
+        Debug.Log(Mathf.Abs(rigidbody2D.velocity.y));
+        //Jump Animation
+        if (Mathf.Abs(rigidbody2D.velocity.y) > 2f)
         {
             animator.SetBool("IsJumping", true);
         }
@@ -47,16 +52,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    // public void OnLanding()
-    // {
-    //     animator.SetBool("IsJumping", false);
-    // }
-
+    //Sets the Player's Spawn Coordinates
     public void SetSpawn()
     {
         spawnPoint = new Vector3(transform.position.x, transform.position.y, 0);
     }
 
+    //Respawns the Player at Spawn Coordinates
     public void Respawn()
     {
         transform.position = spawnPoint;
@@ -64,7 +66,9 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        //Movement function
         controller.Move(horizontalMove * Time.fixedDeltaTime, jump);
+        //Reset jump bool immediately
         jump = false;
     }
 }
